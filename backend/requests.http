@@ -1,0 +1,61 @@
+@baseUrl = http://localhost:3000
+
+### 0. List all anomalies
+GET {{baseUrl}}/anomaly
+
+### 1. Bad data: negative failed units
+POST {{baseUrl}}/anomaly/ingest
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-09T10:00:00Z",
+  "location": "Warehouse Zone B",
+  "supplierId": "SUP-001",
+  "supplierName": "Supplier Y",
+  "shipmentId": "SHIP-TEST-001",
+  "unitsReceived": 1200,
+  "unitsFailed": -5
+}
+
+### 2. Good data
+POST {{baseUrl}}/anomaly/ingest
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-09T10:00:00Z",
+  "location": "Warehouse Zone B",
+  "supplierId": "SUP-001",
+  "supplierName": "Supplier Y",
+  "shipmentId": "SHIP-TEST-002",
+  "unitsReceived": 1200,
+  "unitsFailed": 180
+}
+
+### 3. A field the client is not allowed to send
+POST {{baseUrl}}/anomaly/ingest
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-09T10:00:00Z",
+  "location": "Warehouse Zone B",
+  "supplierId": "SUP-001",
+  "supplierName": "Supplier Y",
+  "shipmentId": "SHIP-TEST-003",
+  "unitsReceived": 1200,
+  "unitsFailed": 180,
+  "status": "resolved"
+}
+
+### 4. Text instead of a number
+POST {{baseUrl}}/anomaly/ingest
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-09T10:00:00Z",
+  "location": "Warehouse Zone B",
+  "supplierId": "SUP-001",
+  "supplierName": "Supplier Y",
+  "shipmentId": "SHIP-TEST-004",
+  "unitsReceived": "abc",
+  "unitsFailed": 180
+}
