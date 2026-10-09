@@ -18,6 +18,10 @@ export class AnomalyService {
         if (!dto.unitsReceived || dto.unitsReceived <= 0) {
             throw new BadRequestException('unitsReceived must be greater than zero');
         }
+        // business rule: you cannot fail more units than you received
+        if (dto.unitsFailed > dto.unitsReceived) {
+            throw new BadRequestException('unitsFailed cannot be greater than unitsReceived');
+        }
 
         // Calculate defect rate — rounded to 2 decimal places
         const defectRate = Math.round(

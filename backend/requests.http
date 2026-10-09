@@ -59,3 +59,33 @@ Content-Type: application/json
   "unitsReceived": "abc",
   "unitsFailed": 180
 }
+
+
+### 5. More failed units than received (150 > 100)
+POST {{baseUrl}}/anomaly/ingest
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-09T10:00:00Z",
+  "location": "Warehouse Zone B",
+  "supplierId": "SUP-001",
+  "supplierName": "Supplier Y",
+  "shipmentId": "SHIP-TEST-005",
+  "unitsReceived": 100,
+  "unitsFailed": 150
+}
+
+### 6. Edge case: every unit failed (100 of 100), which is allowed
+POST {{baseUrl}}/anomaly/ingest
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-09T10:00:00Z",
+  "location": "Warehouse Zone B",
+  "supplierId": "SUP-001",
+  "supplierName": "Supplier Y",
+  "shipmentId": "SHIP-TEST-006",
+  "unitsReceived": 100,
+  "unitsFailed": 100
+}
+
