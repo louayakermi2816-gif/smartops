@@ -13,6 +13,11 @@ export class Anomaly {
     @Prop({ required: true })
     location: string;
 
+    // What the inspector saw, in free text ("cartons wet on arrival").
+    // The RAG search (Phase 3) compares anomalies by the meaning of these notes.
+    @Prop({ default: null })
+    inspectorNotes: string;
+
     // ─── SOURCE ────────────────────────────────────────
     @Prop({ required: true })
     supplierId: string;

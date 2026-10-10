@@ -89,3 +89,18 @@ Content-Type: application/json
   "unitsFailed": 100
 }
 
+### 7. Shipment with inspector notes (free text, optional)
+POST {{baseUrl}}/anomaly/ingest
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-09T10:00:00Z",
+  "location": "Warehouse Zone A",
+  "inspectorNotes": "Two cartons crushed on one corner, contents undamaged.",
+  "supplierId": "SUP-002",
+  "supplierName": "Atlas Components",
+  "shipmentId": "SHIP-TEST-007",
+  "unitsReceived": 800,
+  "unitsFailed": 6
+}
+

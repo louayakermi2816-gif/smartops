@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { computeDefectRate, computeFinancialImpact } from './anomaly.metrics';
 import { Anomaly, AnomalyDocument } from './anomaly.schema';
 import { CreateAnomalyDto } from './dto/create-anomaly.dto';
 
@@ -23,13 +24,9 @@ export class AnomalyService {
             throw new BadRequestException('unitsFailed cannot be greater than unitsReceived');
         }
 
-        // Calculate defect rate — rounded to 2 decimal places
-        const defectRate = Math.round(
-            (dto.unitsFailed / dto.unitsReceived) * 100 * 100
-        ) / 100;
-
-        // Estimate financial impact — each failed unit costs $25
-        const financialImpact = dto.unitsFailed * 25;
+        // Defect rate (%, 2 decimals) and cost of poor quality ($)
+        const defectRate = computeDefectRate(dto.unitsReceived, dto.unitsFailed);
+        const financialImpact = computeFinancialImpact(dto.unitsFailed);
 
         // Create and save — agent fields start empty (null)
         // status starts as 'open' for every new anomaly

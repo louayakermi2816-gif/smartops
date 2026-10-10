@@ -4,6 +4,8 @@ import {
     IsDateString,
     IsNotEmpty,
     IsDefined,
+    IsOptional,
+    MaxLength,
     Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -18,6 +20,12 @@ export class CreateAnomalyDto {
     @IsString()
     @IsNotEmpty()
     location: string;
+
+    // Optional free text from the inspector, e.g. "cartons wet on arrival"
+    @IsOptional()
+    @IsString()
+    @MaxLength(2000)
+    inspectorNotes?: string;
 
     // ── SOURCE ──────────────────────────────────────
     @IsString()
