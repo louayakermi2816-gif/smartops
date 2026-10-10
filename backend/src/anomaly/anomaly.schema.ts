@@ -25,7 +25,8 @@ export class Anomaly {
     @Prop({ required: true })
     supplierName: string;
 
-    @Prop({ required: true })
+    // unique: MongoDB refuses a second record with the same shipment number
+    @Prop({ required: true, unique: true })
     shipmentId: string;
 
     // ─── METRICS ───────────────────────────────────────

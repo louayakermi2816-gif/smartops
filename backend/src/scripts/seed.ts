@@ -3,11 +3,12 @@ import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 import { AnomalySchema } from '../anomaly/anomaly.schema';
 import { computeDefectRate, computeFinancialImpact } from '../anomaly/anomaly.metrics';
+import { buildMongoUri } from '../config/mongo-uri';
 
 dotenv.config();
 
 // ── Connection ──────────────────────────────────────
-const MONGO_URI = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@localhost:27017/${process.env.MONGO_DATABASE}?authSource=admin`;
+const MONGO_URI = buildMongoUri((key) => process.env[key]);
 
 // Same schema as the API, so the seed can never drift from anomaly.schema.ts
 const AnomalyModel = mongoose.model('Anomaly', AnomalySchema);

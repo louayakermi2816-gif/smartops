@@ -14,6 +14,12 @@ async function bootstrap() {
     }),
   );
 
+  // Let the future dashboard (Next.js, Phase 6) call this API from the browser.
+  // CORS_ORIGINS = comma-separated list of allowed web addresses.
+  app.enableCors({
+    origin: (process.env.CORS_ORIGINS ?? 'http://localhost:3001').split(','),
+  });
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

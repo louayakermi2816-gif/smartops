@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { computeDefectRate, computeFinancialImpact } from './anomaly.metrics';
@@ -37,7 +37,15 @@ export class AnomalyService {
             status: 'open',
         });
 
-        return anomaly.save();
+        try {
+            return await anomaly.save();
+        } catch (error) {
+            // MongoDB error 11000 = duplicate key: this shipment was already ingested
+            if ((error as { code?: number }).code === 11000) {
+                throw new ConflictException(`Shipment ${dto.shipmentId} was already ingested`);
+            }
+            throw error;
+        }
     }
 
     async findAll(): Promise<AnomalyDocument[]> {

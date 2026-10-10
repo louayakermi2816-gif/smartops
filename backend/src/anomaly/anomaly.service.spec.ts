@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ConflictException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Anomaly } from './anomaly.schema';
@@ -101,6 +101,18 @@ describe('AnomalyService', () => {
         service.create(shipment({ unitsReceived: 100, unitsFailed: 150 })),
       ).rejects.toThrow('unitsFailed cannot be greater than unitsReceived');
       expect(mockModel).not.toHaveBeenCalled();
+    });
+
+    it('rejects a shipment number that was already ingested (409)', async () => {
+      // MongoDB answers a duplicate unique key with error code 11000
+      mockModel.mockImplementationOnce((data: Record<string, unknown>) => ({
+        ...data,
+        save: jest.fn().mockRejectedValue({ code: 11000 }),
+      }));
+
+      await expect(service.create(shipment())).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 

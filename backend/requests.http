@@ -104,3 +104,17 @@ Content-Type: application/json
   "unitsFailed": 6
 }
 
+### 8. Duplicate: this shipment number already exists (from the seed) → 409
+POST {{baseUrl}}/anomaly/ingest
+Content-Type: application/json
+
+{
+  "timestamp": "2026-07-21T08:00:00Z",
+  "location": "Warehouse Zone B",
+  "supplierId": "SUP-001",
+  "supplierName": "Supplier Y",
+  "shipmentId": "SHIP-2026-00001",
+  "unitsReceived": 1150,
+  "unitsFailed": 19
+}
+

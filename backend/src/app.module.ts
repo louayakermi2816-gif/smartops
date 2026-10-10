@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AnomalyModule } from './anomaly/anomaly.module';
+import { buildMongoUri } from './config/mongo-uri';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { AnomalyModule } from './anomaly/anomaly.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        uri: `mongodb://${configService.get('MONGO_USERNAME')}:${configService.get('MONGO_PASSWORD')}@localhost:27017/${configService.get('MONGO_DATABASE')}?authSource=admin`,
+        uri: buildMongoUri((key) => configService.get<string>(key)),
       }),
       inject: [ConfigService],
     }),
